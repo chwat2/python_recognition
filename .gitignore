@@ -1,0 +1,4 @@
+data/temp/*
+data/raw/*
+data/processed/*
+*__pycache__*
