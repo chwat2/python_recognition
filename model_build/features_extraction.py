@@ -63,7 +63,7 @@ def build_data_set(root_dir,PROCESSED_DATA):
 
     train_files = [f for f in train_files if f not in abnormal_files]
     train_labels = np.zeros(len(train_files))
-    return (train_files,test_files)
+    return (train_files,test_files,train_labels, test_labels)
 
 def extract_signal_features(signal, sr, n_mels=64, frames=5, n_fft=1024, hop_length=512):
     mel_spectrogram = librosa.feature.melspectrogram(
