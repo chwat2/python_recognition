@@ -20,7 +20,7 @@ def initialCheck (data_path, frames, power, files):
     abnormal_signal, sr = sound_tools.load_sound_file(abnormal_signal_file)
     return (normal_signal,abnormal_signal,sr)
 
-def drawSTFTPlot (signals,n_fft,hop_length):
+def draw_STFTPlot (signals,n_fft,hop_length):
     blue = '#1520A6' #azure
     red = '#ff1a1a'
     normal_signal,abnormal_signal,sr = signals
@@ -38,7 +38,7 @@ def drawSTFTPlot (signals,n_fft,hop_length):
     mplot.xlim(0, 200);
     mplot.show()
 
-def drawSectrogram(signals,n_fft,hop_length,normal_signal_file):
+def draw_sectrogram(signals,n_fft,hop_length,normal_signal_file):
     normal_signal,abnormal_signal,sr = signals
 
     D_normal = np.abs(librosa.stft(normal_signal[:10*n_fft], n_fft=n_fft, hop_length=hop_length))
@@ -58,20 +58,20 @@ def drawSectrogram(signals,n_fft,hop_length,normal_signal_file):
     fig2 = mplot.figure(figsize=(24, 6))
     mplot.subplot(1, 2, 1)
     librosa.display.specshow(D_normal, sr=sr, x_axis='time', y_axis='linear', cmap='viridis');
-    mplot.title('Machine #id_00 - Normal signal')
+    mplot.title('Machine #id_00 - sygnał normalny')
     mplot.xlabel('Time (s)')
     mplot.ylabel('Frequency (Hz)')
     mplot.colorbar();
 
     mplot.subplot(1, 2, 2)
     librosa.display.specshow(D_abnormal, sr=sr, x_axis='time', y_axis='linear', cmap='viridis');
-    mplot.title('Machine #id_00 - Abnormal signal')
+    mplot.title('Machine #id_00 - anomalia')
     mplot.xlabel('Time (s)')
     mplot.ylabel('Frequency (Hz)')
     mplot.colorbar();
     mplot.show()
 
-def drawLogSpectrogram (signals,n_fft,hop_length,signal_files):
+def draw_log_spectrogram (signals,n_fft,hop_length,signal_files):
     normal_signal,abnormal_signal,sr = signals
     normal_signal_file,abnormal_signal_file = signal_files
     dB_normal = sound_tools.get_magnitude_scale(normal_signal_file, n_fft=n_fft, hop_length=hop_length)
@@ -96,7 +96,7 @@ def drawLogSpectrogram (signals,n_fft,hop_length,signal_files):
 
     mplot.show()
 
-def drawMelSpectrogram (signals,n_fft,hop_length,n_mels):
+def draw_Mel_spectrogram (signals,n_fft,hop_length,n_mels):
     normal_signal,abnormal_signal,sr = signals
     normal_mel = librosa.feature.melspectrogram(y=normal_signal, sr=sr, n_fft=n_fft, hop_length=hop_length, n_mels=n_mels)
     normal_S_DB = librosa.power_to_db(normal_mel, ref=np.max)
@@ -106,14 +106,14 @@ def drawMelSpectrogram (signals,n_fft,hop_length,n_mels):
     fig = mplot.figure(figsize=(24, 6))
     mplot.subplot(1, 2, 1)
     librosa.display.specshow(normal_S_DB, sr=sr, hop_length=hop_length, x_axis='time', y_axis='mel', cmap='viridis');
-    mplot.title('Machine #id_00 - Normal signal')
+    mplot.title('Machine #id_00 - sygnał normalny')
     mplot.xlabel('Time (s)')
     mplot.ylabel('Frequency (Hz)')
     mplot.colorbar(format='%+2.0f dB');
 
     mplot.subplot(1, 2, 2)
     librosa.display.specshow(abnormal_S_DB, sr=sr, hop_length=hop_length, x_axis='time', y_axis='mel', cmap='viridis');
-    mplot.title('Machine #id_00 - Abnormal signal')
+    mplot.title('Machine #id_00 - anomalia')
     mplot.xlabel('Time (s)')
     mplot.ylabel('Frequency (Hz)')
     mplot.colorbar(format='%+2.0f dB');

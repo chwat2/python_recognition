@@ -21,10 +21,10 @@ def explore_data(paths,frames,power,n_fft,hop_length,n_mels):
     sr = 16000
     print(f'The signals have a {initialData[0].shape} shape. At {sr} Hz, these are {initialData[0].shape[0]/sr:.0f}s signals')
     #TODO
-    de.drawSTFTPlot(initialData,n_fft,hop_length)
-    de.drawSectrogram(initialData,n_fft,hop_length,normal_signal_file)
-    de.drawLogSpectrogram(initialData,n_fft,hop_length,(normal_signal_file,abnormal_signal_file))
-    de.drawMelSpectrogram(initialData,n_fft,hop_length,n_mels)
+    de.draw_STFTPlot(initialData,n_fft,hop_length)
+    de.draw_sectrogram(initialData,n_fft,hop_length,normal_signal_file)
+    de.draw_log_spectrogram(initialData,n_fft,hop_length,(normal_signal_file,abnormal_signal_file))
+    de.draw_Mel_spectrogram(initialData,n_fft,hop_length,n_mels)
 
 def build_model(paths,frames,power,n_fft,hop_length,n_mels):
     DATA,RAW_DATA,PROCESSED_DATA = paths
@@ -98,9 +98,9 @@ if __name__ == '__main__':
 
     try:
         paths = initialize()
-        #explore_data(paths,frame,power,n_fft,hop_length,n_mels)
+        explore_data(paths,frame,power,n_fft,hop_length,n_mels)
         train_files,test_files,train_labels, test_labels = build_model(paths,frame,power,n_fft,hop_length,n_mels)
-        #train_model(paths,n_mels, frame, lr, batch_size, epochs)
+        train_model(paths,n_mels, frame, lr, batch_size, epochs)
         evaluate_model(paths,test_files,train_labels, test_labels,frame,power,n_fft,hop_length,n_mels)
     except Exception as exc:
         print(f"Exception: {exc}")
