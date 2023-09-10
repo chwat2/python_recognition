@@ -6,7 +6,6 @@ import hashlib
 import matplotlib.pyplot as mplot
 import librosa
 import librosa.display
-import IPython.display as ipython
 
 from utils import sound_tools, utils
 
