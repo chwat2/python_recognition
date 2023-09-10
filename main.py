@@ -91,6 +91,6 @@ if __name__ == '__main__':
         #exploreData(paths,frame,power,n_fft,hop_length,n_mels)
         buildModel(paths,frame,power,n_fft,hop_length,n_mels)
 
-        model.train(training_dir, model_dir, n_mels, frame, lr, batch_size, epochs)
+        #model.train(training_dir, model_dir, n_mels, frame, lr, batch_size, epochs)
     except Exception as exc:
         print(f"Exception: {exc}")
