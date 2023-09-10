@@ -6,12 +6,14 @@ import tensorflow as tf
 import matplotlib.pyplot as mplot
 from utils import sound_tools, utils
 from data_exploartion import data_exploartion as de
-from model_build import model_build as mb
+from model_build import features_extraction as fe
+from model_build import model_training as mt
+from model_build import model_evaluation as me
 
-def exploreData(paths,frames,power,n_fft,hop_length,n_mels):
+def explore_data(paths,frames,power,n_fft,hop_length,n_mels):
     data_path = paths[0]
     if not de.checkFiles(data_path):
-        raise RuntimeError("upload files to proper place")
+        raise RuntimeError("sprawdz w readme jakie dane i gdzie pobrac")
     normal_signal_file = os.path.join(data_path, 'fan', 'id_00', 'normal', '00000100.wav')
     abnormal_signal_file = os.path.join(data_path, 'fan', 'id_00', 'abnormal', '00000100.wav')
     initialData = de.initialCheck(data_path,frames,power,(normal_signal_file,abnormal_signal_file))
@@ -24,9 +26,9 @@ def exploreData(paths,frames,power,n_fft,hop_length,n_mels):
     de.drawLogSpectrogram(initialData,n_fft,hop_length,(normal_signal_file,abnormal_signal_file))
     de.drawMelSpectrogram(initialData,n_fft,hop_length,n_mels)
 
-def buildModel(paths,frames,power,n_fft,hop_length,n_mels):
+def build_model(paths,frames,power,n_fft,hop_length,n_mels):
     DATA,RAW_DATA,PROCESSED_DATA = paths
-    train_files,test_files = mb.build_data_set(os.path.join(DATA, 'fan'),PROCESSED_DATA)
+    train_files,test_files,train_labels, test_labels = fe.build_data_set(os.path.join(DATA, 'fan'),PROCESSED_DATA)
     print("liczba plików w zbiorze treningowym:")
     print(len(test_files))
     print("liczba plików w zbiorze testowym:")
@@ -38,10 +40,14 @@ def buildModel(paths,frames,power,n_fft,hop_length,n_mels):
         with open(train_data_location, 'rb') as f:
             train_data = pickle.load(f)
     else:
-        train_data = mb.generate_dataset(train_files, n_mels=n_mels, frames=frames, n_fft=n_fft, hop_length=hop_length)
+        train_data = fe.generate_dataset(train_files, n_mels=n_mels, frames=frames, n_fft=n_fft, hop_length=hop_length)
         with open(os.path.join(DATA, 'autoenkoder_data.pkl'), 'wb') as f:
             pickle.dump(train_data, f)
-    
+    return (train_files,test_files,train_labels, test_labels)
+
+def train_model(paths,n_mels, frame, lr, batch_size, epochs):
+    training_dir,RAW_DATA,PROCESSED_DATA = paths
+    mt.train(training_dir,os.path.join(training_dir, 'model/1'),n_mels, frame, lr, batch_size, epochs)
 
 def initialize():
     print("de init start")
@@ -60,6 +66,10 @@ def initialize():
         os.makedirs(RAW_DATA, exist_ok=True)
         os.makedirs(PROCESSED_DATA, exist_ok=True)
     return (DATA,RAW_DATA,PROCESSED_DATA)
+
+def evaluate_model(paths,test_files,train_labels, test_labels,frame,power,n_fft,hop_length,n_mels):
+    df = me.evaluate_model(paths,test_files,train_labels, test_labels,frame,power,n_fft,hop_length,n_mels)
+    me.analyze_results(paths,df)
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -88,9 +98,9 @@ if __name__ == '__main__':
 
     try:
         paths = initialize()
-        #exploreData(paths,frame,power,n_fft,hop_length,n_mels)
-        buildModel(paths,frame,power,n_fft,hop_length,n_mels)
-
-        #model.train(training_dir, model_dir, n_mels, frame, lr, batch_size, epochs)
+        #explore_data(paths,frame,power,n_fft,hop_length,n_mels)
+        train_files,test_files,train_labels, test_labels = build_model(paths,frame,power,n_fft,hop_length,n_mels)
+        #train_model(paths,n_mels, frame, lr, batch_size, epochs)
+        evaluate_model(paths,test_files,train_labels, test_labels,frame,power,n_fft,hop_length,n_mels)
     except Exception as exc:
         print(f"Exception: {exc}")

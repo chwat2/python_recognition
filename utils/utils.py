@@ -52,3 +52,35 @@ def generate_files_list(root_dir, abnormal_dir='abnormal', normal_dir='normal'):
     train_labels = np.zeros(len(train_files))
     
     return train_files, train_labels, test_files, test_labels
+
+
+def generate_error_types(df, ground_truth_col='Ground Truth', prediction_col='Prediction', normal_label=0.0, anomaly_label=1.0):
+    df['TP'] = 0
+    df['TN'] = 0
+    df['FP'] = 0
+    df['FN'] = 0
+    df.loc[(df[ground_truth_col] == df[prediction_col]) & (df[ground_truth_col] == normal_label), 'TP'] = 1
+    df.loc[(df[ground_truth_col] == df[prediction_col]) & (df[ground_truth_col] == anomaly_label), 'TN'] = 1
+    df.loc[(df[ground_truth_col] != df[prediction_col]) & (df[ground_truth_col] == normal_label), 'FP'] = 1
+    df.loc[(df[ground_truth_col] != df[prediction_col]) & (df[ground_truth_col] == anomaly_label), 'FN'] = 1
+    
+    return df
+
+def print_confusion_matrix(confusion_matrix, class_names, figsize = (4,3), fontsize=14):
+    df_cm = pandas.DataFrame(confusion_matrix, 
+                        index=class_names, 
+                        columns=class_names)
+    
+    fig = mplot.figure(figsize=figsize)
+    try:
+        heatmap = seaborn.heatmap(df_cm, annot=True, fmt="d", annot_kws={"size": 16}, cmap='cividis')
+    except ValueError:
+        raise ValueError("input ints")
+    
+    # Figure customization:
+    heatmap.yaxis.set_ticklabels(heatmap.yaxis.get_ticklabels(), rotation=0, ha='right', fontsize=fontsize)
+    heatmap.xaxis.set_ticklabels(heatmap.xaxis.get_ticklabels(), rotation=0, ha='right', fontsize=fontsize)
+    mplot.ylabel('Wynik rzeczywisty', fontsize=16)
+    mplot.xlabel('Wynik prognozowany', fontsize=16)
+    
+return fig
