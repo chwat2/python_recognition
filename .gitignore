@@ -2,3 +2,4 @@ data/temp/*
 data/raw/*
 data/processed/*
 *__pycache__*
+recognition.code-workspace
