@@ -6,6 +6,9 @@ https://zenodo.org/record/3384388/files/-6_dB_fan.zip?download=1
 ### Python - install dependencies
 
     python -m venv myenv
+    ### on windows
+    myenv\Scripts\activate.bat  
+    ###
     pip install -r requirements.txt
     python3 main.py --epochs 16 --n_mels 64 --frame 5 --learning-rate 0.001 --batch-size 512 --n_fft 4096 --hop_length 512
 
