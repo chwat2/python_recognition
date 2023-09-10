@@ -83,4 +83,4 @@ def print_confusion_matrix(confusion_matrix, class_names, figsize = (4,3), fonts
     mplot.ylabel('Wynik rzeczywisty', fontsize=16)
     mplot.xlabel('Wynik prognozowany', fontsize=16)
     
-return fig
+    return fig
