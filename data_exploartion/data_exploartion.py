@@ -10,23 +10,6 @@ import IPython.display as ipython
 
 from utils import sound_tools, utils
 
-def initialize ():
-    print("de init start")
-    random.seed(508)
-    np.random.seed(508)
-    mplot.style.use('seaborn')
-    # Paths
-    DATA           = os.path.join('data', 'temp')
-    RAW_DATA       = os.path.join('data', 'raw')
-    PROCESSED_DATA = os.path.join('data', 'processed')
-    print(DATA)
-    if not os.path.exists(DATA):
-        print('Data directory does not exist, creating them.')
-        os.makedirs(DATA, exist_ok=True)
-        os.makedirs(RAW_DATA, exist_ok=True)
-        os.makedirs(PROCESSED_DATA, exist_ok=True)
-    return (DATA,RAW_DATA,PROCESSED_DATA)
-
 def checkFiles (data_path):
     first_file = os.path.join(data_path, 'fan', 'id_00', 'normal', '00000000.wav')
     return os.path.exists(first_file)
