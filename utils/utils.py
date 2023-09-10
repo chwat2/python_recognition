@@ -1,5 +1,5 @@
 import hashlib
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as mplot
 import numpy as np
 import os
 import pandas as pd
@@ -67,13 +67,13 @@ def generate_error_types(df, ground_truth_col='Ground Truth', prediction_col='Pr
     return df
 
 def print_confusion_matrix(confusion_matrix, class_names, figsize = (4,3), fontsize=14):
-    df_cm = pandas.DataFrame(confusion_matrix, 
+    df_cm = pd.DataFrame(confusion_matrix, 
                         index=class_names, 
                         columns=class_names)
     
     fig = mplot.figure(figsize=figsize)
     try:
-        heatmap = seaborn.heatmap(df_cm, annot=True, fmt="d", annot_kws={"size": 16}, cmap='cividis')
+        heatmap = sns.heatmap(df_cm, annot=True, fmt="d", annot_kws={"size": 16}, cmap='cividis')
     except ValueError:
         raise ValueError("input ints")
     
