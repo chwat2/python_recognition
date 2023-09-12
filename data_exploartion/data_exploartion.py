@@ -1,28 +1,29 @@
 import os
-import random
-import sys
-import numpy as np
-import hashlib
-import matplotlib.pyplot as mplot
+
 import librosa
 import librosa.display
+import matplotlib.pyplot as mplot
+import numpy as np
 
-from utils import sound_tools, utils
+from utils import sound_tools
 
-def checkFiles (data_path):
+
+def check_files(data_path):
     first_file = os.path.join(data_path, 'fan', 'id_00', 'normal', '00000000.wav')
     return os.path.exists(first_file)
 
-def initialCheck (data_path, frames, power, files):
+
+def initialCheck(data_path, frames, power, files):
     normal_signal_file, abnormal_signal_file = files
     normal_signal, sr = sound_tools.load_sound_file(normal_signal_file)
     abnormal_signal, sr = sound_tools.load_sound_file(abnormal_signal_file)
-    return (normal_signal,abnormal_signal,sr)
+    return (normal_signal, abnormal_signal, sr)
 
-def draw_STFTPlot (signals,n_fft,hop_length):
-    blue = '#1520A6' #azure
+
+def draw_STFTPlot(signals, n_fft, hop_length):
+    blue = '#1520A6'  # azure
     red = '#ff1a1a'
-    normal_signal,abnormal_signal,sr = signals
+    normal_signal, abnormal_signal, sr = signals
 
     D_normal = np.abs(librosa.stft(normal_signal[:n_fft], n_fft=n_fft, hop_length=n_fft + 1))
     D_abnormal = np.abs(librosa.stft(abnormal_signal[:n_fft], n_fft=n_fft, hop_length=n_fft + 1))
@@ -37,10 +38,11 @@ def draw_STFTPlot (signals,n_fft,hop_length):
     mplot.xlim(0, 200);
     mplot.show()
 
-def draw_sectrogram(signals,n_fft,hop_length,normal_signal_file):
-    normal_signal,abnormal_signal,sr = signals
 
-    D_normal = np.abs(librosa.stft(normal_signal[:10*n_fft], n_fft=n_fft, hop_length=hop_length))
+def draw_sectrogram(signals, n_fft, hop_length, normal_signal_file):
+    normal_signal, abnormal_signal, sr = signals
+
+    D_normal = np.abs(librosa.stft(normal_signal[:10 * n_fft], n_fft=n_fft, hop_length=hop_length))
     dB_normal = sound_tools.get_magnitude_scale(normal_signal_file)
     fig = mplot.figure(figsize=(12, 6))
     librosa.display.specshow(D_normal, sr=sr, x_axis='time', y_axis='linear', cmap='viridis');
@@ -70,9 +72,10 @@ def draw_sectrogram(signals,n_fft,hop_length,normal_signal_file):
     mplot.colorbar();
     mplot.show()
 
-def draw_log_spectrogram (signals,n_fft,hop_length,signal_files):
-    normal_signal,abnormal_signal,sr = signals
-    normal_signal_file,abnormal_signal_file = signal_files
+
+def draw_log_spectrogram(signals, n_fft, hop_length, signal_files):
+    normal_signal, abnormal_signal, sr = signals
+    normal_signal_file, abnormal_signal_file = signal_files
     dB_normal = sound_tools.get_magnitude_scale(normal_signal_file, n_fft=n_fft, hop_length=hop_length)
     dB_abnormal = sound_tools.get_magnitude_scale(abnormal_signal_file, n_fft=n_fft, hop_length=hop_length)
 
@@ -95,11 +98,14 @@ def draw_log_spectrogram (signals,n_fft,hop_length,signal_files):
 
     mplot.show()
 
-def draw_Mel_spectrogram (signals,n_fft,hop_length,n_mels):
-    normal_signal,abnormal_signal,sr = signals
-    normal_mel = librosa.feature.melspectrogram(y=normal_signal, sr=sr, n_fft=n_fft, hop_length=hop_length, n_mels=n_mels)
+
+def draw_Mel_spectrogram(signals, n_fft, hop_length, n_mels):
+    normal_signal, abnormal_signal, sr = signals
+    normal_mel = librosa.feature.melspectrogram(y=normal_signal, sr=sr, n_fft=n_fft, hop_length=hop_length,
+                                                n_mels=n_mels)
     normal_S_DB = librosa.power_to_db(normal_mel, ref=np.max)
-    abnormal_mel = librosa.feature.melspectrogram(y=abnormal_signal, sr=sr, n_fft=n_fft, hop_length=hop_length, n_mels=n_mels)
+    abnormal_mel = librosa.feature.melspectrogram(y=abnormal_signal, sr=sr, n_fft=n_fft, hop_length=hop_length,
+                                                  n_mels=n_mels)
     abnormal_S_DB = librosa.power_to_db(abnormal_mel, ref=np.max)
 
     fig = mplot.figure(figsize=(24, 6))
